@@ -1,0 +1,68 @@
+// --------------------------------------------------
+import processing.svg.*;
+
+boolean bExportSVG = false;
+
+// Variables to store circle properties
+float circleX, circleY, circleRadius;
+
+// Flags to check if the mouse is pressed
+boolean mousePressedFlag = false;
+
+// --------------------------------------------------
+void setup() {
+  size(800, 800);
+}
+
+// --------------------------------------------------
+void draw() {
+  background(255);
+
+  if (bExportSVG) {
+    beginRecord(SVG, "data/exports/svg/export_" + timestamp() + ".svg");
+  }
+
+  noFill();
+  stroke(0);
+
+  if (mousePressedFlag) {
+    // Draw the circle with the current properties
+    ellipse(circleX, circleY, circleRadius * 2, circleRadius * 2);
+  }
+
+  if (bExportSVG) {
+    endRecord();
+    bExportSVG = false;
+  }
+}
+
+// --------------------------------------------------
+void mousePressed() {
+  mousePressedFlag = true;
+  circleX = mouseX;
+  circleY = mouseY;
+}
+
+// --------------------------------------------------
+void mouseDragged() {
+  // Calculate the radius based on the distance between the starting click point and the current mouse position
+  circleRadius = dist(circleX, circleY, mouseX, mouseY);
+}
+
+// --------------------------------------------------
+void mouseReleased() {
+  mousePressedFlag = false;
+}
+
+// --------------------------------------------------
+void keyPressed() {
+  if (key == 'e') {
+    bExportSVG = true;
+  }
+}
+
+// --------------------------------------------------
+String timestamp() {
+  Calendar now = Calendar.getInstance();
+  return String.format("%1$ty%1$tm%1$td_%1$tH%1$tM%1$tS", now);
+}
